@@ -85,7 +85,7 @@ def experiment(args):
                 correctness, _ = utils.test_batch(model, inputs, labels, source=args.source)
 
                 if args.adapt:
-                    utils.adapt_batch(model, args.niter, inputs, optimizer, iteration, args.save_iter, train=False, q1=args.q, q2=1 - args.q, method=args.method, entropy=args.use_entropy)
+                    utils.adapt_batch(model, args.niter, inputs, optimizer, iteration, args.save_iter, train=False, entropy=args.use_entropy)
 
                     for k in range(len(iteration[:indice + 1])):
                         ckpt = torch.load(args.save_iter + 'weights_iter_' + str(iteration[k]) + '.pkl')

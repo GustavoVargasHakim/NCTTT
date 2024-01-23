@@ -76,7 +76,7 @@ def accuracy(output, target, topk=(1,)):
         return res
 
 '''--------------------Adaptation Function-----------------------------'''
-def adapt_batch(net, niter, inputs, opt, iterations, save_iter, use_mean = False, full=False, train=False, **kwargs):
+def adapt_batch(net, niter, inputs, opt, iterations, save_iter, use_mean = False, train=False, **kwargs):
     entropy = kwargs['entropy']
     net.inference = False
     mean_global = 0.023

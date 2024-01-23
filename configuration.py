@@ -4,7 +4,7 @@ def argparser():
     parser = argparse.ArgumentParser()
 
     #Directories
-    parser.add_argument('--root', type=str, default='/home/vhakim/scratch/Projects/NoisyNet/', help='Base path')
+    parser.add_argument('--root', type=str, default='/home/vhakim/scratch/Projects/NCTTT/', help='Base path')
     parser.add_argument('--dataroot', type=str, default='/home/davidoso/Documents/Data/')
     parser.add_argument('--save', type=str, default='work/', help='Path for base training weights')
     parser.add_argument('--save-iter', type=str, default='work/', help='Path for base training weights')
