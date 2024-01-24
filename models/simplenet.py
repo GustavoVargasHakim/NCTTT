@@ -132,16 +132,21 @@ class SimpleNet(nn.Module):
             H = W = true_feats.shape[2]
             mean = torch.zeros(D).to(self.device)
             I = torch.eye(D).to(self.device)
-            gaussian1 = torch.distributions.MultivariateNormal(mean, (self.std1 ** 2) * I)
+            if self.std1 != 0:
+                gaussian1 = torch.distributions.MultivariateNormal(mean, (self.std1 ** 2) * I)
             gaussian2 = torch.distributions.MultivariateNormal(mean, (self.std2 ** 2) * I)
-            N1 = gaussian1.sample((B * W * H,)).reshape(B, D, H * W).transpose(2, 1).reshape(B, D, W, H)
+            if self.std1 != 0:
+                N1 = gaussian1.sample((B * W * H,)).reshape(B, D, H * W).transpose(2, 1).reshape(B, D, W, H)
             N2 = gaussian2.sample((B * W * H,)).reshape(B, D, H * W).transpose(2, 1).reshape(B, D, W, H)
             noise_idxs = torch.randint(0, 1, torch.Size([true_feats.shape[0]]))
             noise_one_hot = torch.nn.functional.one_hot(noise_idxs, num_classes=1).to(self.device)
-            N1 = (N1 * noise_one_hot.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1)).sum(1)
             N2 = (N2 * noise_one_hot.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1)).sum(1)
+            if self.std1 != 0:
+                N1 = (N1 * noise_one_hot.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1)).sum(1)
+            else:
+                N1 = torch.zeros_like(N2)
             N = torch.cat([N1, N2], dim=0)
-            z = 0.5 * ((1 / self.std2) ** 2 - (1 / self.std1) ** 2) * (N * N).sum(dim=1) - D * np.log(self.std1 / self.std2)
+            z = 0.5 * ((1 / self.std2) ** 2 - (1 / (self.std1 + 1e-6)) ** 2) * (N * N).sum(dim=1) - D * np.log(self.std1 / self.std2)
             Y = 1 / (1 + torch.exp(-z))
             Y = torch.where(Y < 1e-6, 0, Y)
             X1 = true_feats + N1.to(self.device)
@@ -151,7 +156,7 @@ class SimpleNet(nn.Module):
             scores = F.sigmoid(scores.squeeze(1))
             loss = crossentropy(scores, Y.to(self.device))
 
-            return loss, scores
+            return loss
 
         else:
             scores = -self.discriminator(true_feats)
