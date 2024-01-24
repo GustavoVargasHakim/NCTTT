@@ -99,7 +99,7 @@ def create_model(args, device='cpu', weights=None):
         net.global_pool = nn.AdaptiveAvgPool2d((1, 1))
         net.fc = nn.Linear(2048, num_classes)
         net.forward = func_type(visda_forward, net)
-        weights_path = os.path.join(args.root, 'weights', 'resnet50.pth')
+        weights_path = os.path.join(args.root,  'weights', 'resnet50.pth')
         pretraining = torch.load(weights_path)
         del pretraining['fc.weight']
         del pretraining['fc.bias']
