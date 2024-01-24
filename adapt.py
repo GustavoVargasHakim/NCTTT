@@ -90,7 +90,7 @@ def experiment(args):
                     for k in range(len(iteration[:indice + 1])):
                         ckpt = torch.load(args.save_iter + 'weights_iter_' + str(iteration[k]) + '.pkl')
                         model.load_state_dict(ckpt['weights'])
-                        correctness_new, _ = utils.test_batch(model, inputs, labels, source=args.source, q1=args.q, q2=1 - args.q, method=args.method)
+                        correctness_new, _ = utils.test_batch(model, inputs, labels, source=args.source)
                         for i in range(len(correctness_new.tolist())):
                             if correctness[i] == True and correctness_new[i] == True:
                                 good_good[k, i + batch_idx * args.batch_size] = 1
