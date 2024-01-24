@@ -143,13 +143,17 @@ class SimpleNet(nn.Module):
             N2 = (N2 * noise_one_hot.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1)).sum(1)
             if self.std1 != 0:
                 N1 = (N1 * noise_one_hot.unsqueeze(-1).unsqueeze(-1).unsqueeze(-1)).sum(1)
+                N = torch.cat([N1, N2], dim=0)
+                z = 0.5 * ((1 / self.std2) ** 2 - (1 / (self.std1 + 1e-6)) ** 2) * (N * N).sum(dim=1) - D * np.log(
+                    self.std1 / self.std2)
+                Y = 1 / (1 + torch.exp(-z))
+                Y = torch.where(Y < 1e-6, 0, Y)
+                X1 = true_feats + N1.to(self.device)
             else:
-                N1 = torch.zeros_like(N2)
-            N = torch.cat([N1, N2], dim=0)
-            z = 0.5 * ((1 / self.std2) ** 2 - (1 / (self.std1 + 1e-6)) ** 2) * (N * N).sum(dim=1) - D * np.log(self.std1 / self.std2)
-            Y = 1 / (1 + torch.exp(-z))
-            Y = torch.where(Y < 1e-6, 0, Y)
-            X1 = true_feats + N1.to(self.device)
+                X1 = true_feats
+                Y1 = torch.zeros(X1.shape[0]).to(self.device)
+                Y2 = torch.ones(N2.shape[0]).to(self.device)
+                Y = torch.cat([Y1, Y2]).unsqueeze(1).float()
             X2 = true_feats + N2.to(self.device)
             X = torch.cat([X1, X2], dim=0)
             scores = self.discriminator(X)
