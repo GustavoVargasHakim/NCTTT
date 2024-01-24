@@ -76,7 +76,7 @@ def prepare_test_data(args):
     elif args.dataset == 'cifar100':
         tesize = 10000
         if not hasattr(args, 'corruption') or args.corruption == 'original':
-            teset = torchvision.datasets.CIFAR100(root=args.dataroot  + 'test/',
+            teset = torchvision.datasets.CIFAR100(root=args.dataroot,
                 train=False, download=False, transform=te_transforms)
         elif args.corruption in common_corruptions:
             teset_raw = np.load(args.dataroot + '/CIFAR-100-C/%s.npy' % (args.corruption))
