@@ -151,9 +151,9 @@ class SimpleNet(nn.Module):
                 X1 = true_feats + N1.to(self.device)
             else:
                 X1 = true_feats
-                Y1 = torch.zeros(X1.shape[0]).to(self.device)
-                Y2 = torch.ones(N2.shape[0]).to(self.device)
-                Y = torch.cat([Y1, Y2]).unsqueeze(1).float()
+                Y1 = torch.zeros((X1.shape[0], X1.shape[2], X1.shape[3])).to(self.device)
+                Y2 = torch.ones((N2.shape[0], N2.shape[2], N2.shape[3])).to(self.device)
+                Y = torch.cat([Y1, Y2]).float()
             X2 = true_feats + N2.to(self.device)
             X = torch.cat([X1, X2], dim=0)
             scores = self.discriminator(X)
