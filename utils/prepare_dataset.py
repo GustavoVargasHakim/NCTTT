@@ -131,7 +131,7 @@ def prepare_train_data(args):
             train=True, download=False, transform=tr_transforms)
         vset = None
     elif args.dataset == 'cifar100':
-        trset = torchvision.datasets.CIFAR100(root=args.dataroot + 'train/',
+        trset = torchvision.datasets.CIFAR100(root=args.dataroot,
             train=True, download=False, transform=tr_transforms)
         vset = None
     elif args.dataset == 'visdaC':
