@@ -91,10 +91,10 @@ def visda_forward(self, x, feature=True):
 # This is the modified forward_features method from the timm model (special case for CIFAR-10/100)
 # Ignore the error, as the function checkpoint_seq is out of context, but is correct inside timm model
 def create_model(args, device='cpu', weights=None):
+    func_type = types.MethodType
     # Creating model based on dataset
     if args.dataset == 'visdaC':
         num_classes = 12
-        func_type = types.MethodType
         net = timm.create_model('resnet50', features_only=True, pretrained=False)
         net.global_pool = nn.AdaptiveAvgPool2d((1, 1))
         net.fc = nn.Linear(2048, num_classes)
@@ -106,7 +106,12 @@ def create_model(args, device='cpu', weights=None):
         net.load_state_dict(pretraining, strict=False)
     elif args.dataset in ['cifar10','cifar100']:
         num_classes = 10 if args.dataset == 'cifar10' else 100
-        net = ResNet.resnet50(num_classes)
+        net = timm.create_model('resnet50', features_only=True, pretrained=False)
+        net.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        net.global_pool = nn.AdaptiveAvgPool2d((1, 1))
+        net.fc = nn.Linear(2048, num_classes)
+        net.forward = func_type(visda_forward, net)
+        #net = ResNet.resnet50(num_classes)
     ssh = simplenet.SimpleNet(args.layers, args.embed_size, std1=args.std, std2=args.std2, dataset=args.dataset, device=device).to(device)
     model = ExtractorHead(net, ssh)
 
