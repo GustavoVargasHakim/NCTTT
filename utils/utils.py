@@ -14,9 +14,9 @@ def save_checkpoint(state, is_best, args):
     for layer in args.layers:
         string += str(layer)
     if is_best:
-        torch.save(state, args.save + args.dataset + '_' + args.model  + '_' + args.optimizer  + '_std1' + str(args.std) + '_std2' + str(args.std2) + '_lr' + str(args.lr) + string + separate + '_best.pth')
+        torch.save(state, args.save + args.dataset + '_' + args.model + '_' + args.optimizer + '_std1' + str(args.std) + '_std2' + str(args.std2) + '_lr' + str(args.lr) + string + separate + '_best.pth')
     else:
-        torch.save(state, args.save + args.dataset + '_' + args.model  + '_' + args.optimizer  + '_std1' + str(args.std) + '_std2' + str(args.std2) + '_lr' + str(args.lr) + string + separate + '.pth')
+        torch.save(state, args.save + args.dataset + '_' + args.model + '_' + args.optimizer + '_std1' + str(args.std) + '_std2' + str(args.std2) + '_lr' + str(args.lr) + string + separate + '.pth')
 
 def get_path(args, is_best=False):
     if args.separate:
@@ -29,7 +29,7 @@ def get_path(args, is_best=False):
         string = '_'
         for layer in args.layers:
             string += str(layer)
-        path = args.dataset + '_' + args.model + '_' + args.method + '_' + args.optimizer + '_full' + str(args.full) + '_std' + str(args.std) + '_q' + str(args.q) + '_lr' + str(args.lr) + string + separate
+        path = args.dataset + '_' + args.model + '_' + args.optimizer+ '_std1' + str(args.std) + '_std2' + str(args.std2) + '_lr' + str(args.lr) + string + separate
         if is_best:
             path += '_best.pth'
         else:

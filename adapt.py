@@ -37,7 +37,7 @@ def experiment(args):
     else:
         model = create_model.create_model(args, device=device).to(device)
     path = utils.get_path(args, is_best=args.best)
-    checkpoint = torch.load(os.path.join(args.root, args.dataset, 'weights', path))
+    checkpoint = torch.load(os.path.join(args.root, 'weights', path))
     model.load_state_dict(checkpoint['state_dict'])
 
     state = copy.deepcopy(model.state_dict())
