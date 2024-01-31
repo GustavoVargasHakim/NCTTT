@@ -21,11 +21,12 @@ def argparser():
     #SimpleNet
     parser.add_argument('--patchsize', type=int, default=3, help='Patching size')
     parser.add_argument('--patchstride', type=int, default=1, help='Patching stride')
-    parser.add_argument('--layers', type=int, nargs='+', default=[0, 1], help='Layer blocks to put additional modules on (very common in TTT methods)')
+    parser.add_argument('--layers', type=int, nargs='+', default=[1], help='Layer blocks to put additional modules on (very common in TTT methods)')
     parser.add_argument('--embed-size', type=int, default=1536, help='Embedding size')
     parser.add_argument('--th-dsc', type=float, default=0.5, help='Threshold for discriminator')
     parser.add_argument('--std', type=float, default=0.1, help='Noise standard deviation')
     parser.add_argument('--std2', type=float, default=0.015, help='Noise standard deviation')
+    parser.add_argument('--hidden', type=int, default=4, help='Noise standard deviation')
 
     #Dataset
     parser.add_argument('--dataset', type=str, default='cifar10', choices=('cifar10', 'cifar100', 'imagenet', 'visdaC'))
